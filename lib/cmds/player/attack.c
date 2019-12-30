@@ -72,6 +72,18 @@ static void main(string str) {
       return;
    }
 
+   if (obj->is_player()) {
+      if (obj->query_environment()->query_pk() == 0) {
+         write("You cannot kill other players");
+         return;
+      }
+   }
+
+   if(obj->query_environment()->query_nokill() == 1) {
+     write("You can't kill anything in here, this is unholy ground!");
+     return;
+   }
+
    this_player()->targeted_action("$N $vattack $t.", obj);
    this_player()->attack(obj);
 }

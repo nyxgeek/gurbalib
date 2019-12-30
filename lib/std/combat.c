@@ -161,14 +161,13 @@ void receive_damage(object who, int dam) {
       who->query_id() + ".%^RESET%^");
 
    if (this_object()->query_hp() <= dam) {
-      x = this_object()->query_max_hp();
       killer = who;
       when = time();
       this_object()->add_killed_by(killer, when);
       this_object()->halt_fight();
       who->halt_fight();
       who->increment_kills();
-      who->increase_expr(x);
+
       /* make sure they are dead */
       this_object()->decrease_hp(x);
    }
@@ -351,7 +350,7 @@ void attack_with(string skill, object weapon, object target) {
          tmp = this_object()->query_skill("combat/unarmed") +
             this_object()->query_skill("combat/unarmed") / 2;
          if (tmp <= target->query_skill("combat/defense")) {
-            this_object()->learn_skill(this_object()->query_hit_skill());
+            this_object()->learn_skill("combat/unarmed");
 #ifdef DEBUG_COMBAT
             this_object()->message("Learn: hit_skill, " +
                this_object()->query_skill("combat/unarmed"));

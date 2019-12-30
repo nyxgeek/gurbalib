@@ -189,14 +189,16 @@ int query_age_in_seconds(void) {
 void die(void) {
    object killer, obj, *inv;
    int i;
-
    killer = this_object()->query_killer();
    if (killer) {
       if (killer->is_player() ) {
+         killer->increase_expr(this_object()->query_level() * 100);
+         killer->message("%^BOLD%^%^CYAN%^You are awarded %^RESET%^%^GREEN%^" + (this_object()->query_level() * 100) + "%^BOLD%^%^CYAN%^ experience...%^RESET%^");
          set_this_player(killer);
       }
 
       killer->message("%^BOLD%^%^CYAN%^You killed " +
+
          this_object()->query_Name() + ".%^RESET%^");
    }
 

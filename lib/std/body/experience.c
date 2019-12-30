@@ -84,6 +84,25 @@ string query_level_title(int level) {
    }
 }
 
+void set_level(int lvl) {
+   int tmpexp;
+   if (lvl < 4) {
+     tmpexp = 0;
+   } else {
+     tmpexp = ((lvl - 3) * (lvl - 3)) * 2000;
+   }
+   level = lvl;
+   this_object()->set_max_hp((level *
+      this_object()->query_base_stat("str")) + 20);
+   this_object()->set_max_mana((level *
+      this_object()->query_base_stat("wis")) + 20);
+   this_object()->set_max_end((level *
+      this_object()->query_base_stat("con")) + 20);
+   this_object()->set_title("$N " + query_level_title(level));
+   this_object()->set_expr(tmpexp);
+   this_object()->set_internal_max_weight((15 + this_object()->query_base_stat("str")) * 100);
+}
+
 void increase_level(void) {
    level += 1;
    this_object()->set_max_hp((level *

@@ -3,8 +3,10 @@
 inherit cont "/std/container";
 
 static mapping exits, hidden_exits, areas, items;
-static int last_exit, weather, light;
-string dark_msg;
+static int last_exit, weather, light, pk, nokill;
+static int * coords, * dimensions, * map_start;
+
+string dark_msg, domain_name;
 
 void setup(void);
 
@@ -12,8 +14,49 @@ int is_room(void) {
    return 1;
 }
 
+void set_coords(int * flag) {
+   coords = flag;
+}
+
+int *get_coords(void) {
+   return coords;
+}
+
+void set_dimensions(int * flag) {
+   dimensions = flag;
+}
+
+int *get_dimensions(void) {
+   if (!dimensions) {
+     return ({ 12, 16 });
+   }
+   return dimensions;
+}
+
+void set_mapstart(int * flag) {
+   map_start = flag;
+}
+
+int *get_mapstart(void) {
+   if (!map_start) {
+     return ({ 0, 0 });
+   }
+   return map_start;
+}
+
 void set_light(int flag) {
    light = flag;
+}
+
+void set_domainname(string flag) {
+   domain_name = flag;
+}
+
+string get_domainname(void) {
+  if (!domain_name) {
+      domain_name = "EvilMogs Horror House";
+    }
+  return domain_name;
 }
 
 private int object_is_lighted(object obj) {
@@ -75,6 +118,28 @@ void set_weather(int flag) {
 
 int query_weather(void) {
    return weather;
+}
+
+void set_pk(int flag) {
+   pk = flag;
+}
+
+void set_nokill(int flag) {
+   nokill = flag;
+}
+
+int query_pk(void) {
+  if (!pk) {
+    return 0;
+  }
+  return pk;
+}
+
+int query_nokill(void) {
+  if (!nokill) {
+    return 0;
+  }
+  return nokill;
 }
 
 void add_area(string str) {

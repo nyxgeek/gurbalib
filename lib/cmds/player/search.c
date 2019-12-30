@@ -65,12 +65,15 @@ static void main(string str) {
       }
    }
 
-   if (!str || str == "" || strcmp(str, "room") == 0) {
+   if (!str || str == "" || strcmp(str, "room") == 0 || str == "here") {
       obj = this_player()->query_environment();
    } else {
       obj = this_player()->present(str);
       if (!obj) {
          obj = this_player()->query_environment()->present(str);
+         if (!obj) {
+            obj = this_player()->query_environment();
+         }
       }
    }
 
