@@ -111,7 +111,7 @@ void increase_level(void) {
       this_object()->query_base_stat("wis")) + 20);
    this_object()->set_max_end((level *
       this_object()->query_base_stat("con")) + 20);
-   write("Congratulations, you just achieved level: " + level + "\n");
+   this_object()->set_internal_max_weight((15 + this_object()->query_base_stat("str")) * 100);
    this_object()->set_title("$N " + query_level_title(level));
 }
 
@@ -123,10 +123,11 @@ void increase_expr(int expr) {
    if (experience < 0) {
       experience = 0;
    }
-   if (ready_for_next_level()) {
+   while (ready_for_next_level()) {
       increase_level();
       write("Congratulations, you just went up a level...\n");
-      level += 1;
+      CHANNEL_D->chan_send_string("announce", "", this_player()->query_name() +" has reached level " + level, 1);
+      this_object()->set_title("$N " + query_level_title(level));
    }
 }
 
