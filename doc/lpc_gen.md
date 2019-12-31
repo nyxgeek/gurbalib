@@ -114,32 +114,20 @@ The actual room setup is done by this code
 ```
 
 ### Search
-Now since I'm lazy and want unlimited mobs I put in the mob search code in this section, I had to heavily modify /cmds/player/search.c and should really contribute that upstream
+Now since I'm lazy and want unlimited mobs I put in the mob search code in this section. Basically when you 'search room' or 'search here' an agressive mob will jump out and attack you.
 
 ```
-  roomfile.write('inherit "/std/room";\n\n')
-  roomfile.write('#include "../domain.h" \n\n')
-  roomfile.write('void setup( void ) {\n\n')
-  roomfile.write('  set_domainname("%^GREEN%^Woodland %^RED%^Critter %^GREEN%^Christmas%^RESET%^");\n')
-  roomfile.write('  set_coords(({ ' + coords[0] + ', ' + coords[1] + ' }));\n')
-  roomfile.write('  set_dimensions(({ ' + dimensions[0] + ', ' + dimensions[1] + ' }));\n\n')
-  # add room desc plus color code eventually
-  roomfile.write('  set_short( "' + rshort + '" );\n')
-  roomfile.write('  set_long( "' + rlong + '" );\n\n')
-  if exit_array:
-    roomfile.write(' set_exits( ([\n')
-    exitcount = len(exit_array)
-    exitnum = 0
-    for rexit in exit_array:
-      exitnum += 1
-    #  print roomname + " " + rexit[0] + " " + rexit[1]
-      if exitcount == exitnum:
-        roomfile.write('  "' + rexit[0] + '" : ' + 'DIR+"/rooms/' + rexit[1] + '.c"\n')
-      else:
-        roomfile.write('  "' + rexit[0] + '" : ' + 'DIR+"/rooms/' + rexit[1] + '.c",\n')
-    roomfile.write('  ]) );\n\n')
-    # end code here
-    roomfile.write('}\n\n')
+  # do search code to find mob
+    if room_moblist:
+      roomfile.write('int do_search(void) {\n')
+      roomfile.write('   object mob;\n')
+      for mob in room_moblist:
+        roomfile.write('   mob = clone_object(DIR + "/npc/' + mob[1] + '");\n')
+        roomfile.write('   mob->setup();\n')
+        roomfile.write('   mob->move(this_player()->query_environment());\n')
+        roomfile.write('   mob->attack(this_player());\n\n')
+      roomfile.write('   return 1;\n}\n')
+      roomfile.close
 ```
 
 # Results
