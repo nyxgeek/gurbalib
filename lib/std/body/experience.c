@@ -85,34 +85,52 @@ string query_level_title(int level) {
 }
 
 void set_level(int lvl) {
+   object obj;
    int tmpexp;
-   if (lvl < 4) {
-     tmpexp = 0;
-   } else {
-     tmpexp = ((lvl - 3) * (lvl - 3)) * 2000;
+   obj = this_object();
+   switch (lvl) {
+     case 1:
+       tmpexp = 0;
+       break;
+     case 2:
+       tmpexp = 2000;
+       break;
+     default:
+       tmpexp = ((lvl - 1) * (lvl - 1)) * 2000;
+       break;
    }
    level = lvl;
-   this_object()->set_max_hp((level *
-      this_object()->query_base_stat("str")) + 20);
-   this_object()->set_max_mana((level *
-      this_object()->query_base_stat("wis")) + 20);
-   this_object()->set_max_end((level *
-      this_object()->query_base_stat("con")) + 20);
-   this_object()->set_title("$N " + query_level_title(level));
-   this_object()->set_expr(tmpexp);
-   this_object()->set_internal_max_weight((15 + this_object()->query_base_stat("str")) * 100);
+   obj->set_max_hp((level *
+      obj->query_base_stat("str")) + 20);
+   obj->set_max_mana((level *
+      obj->query_base_stat("wis")) + 20);
+   obj->set_max_end((level *
+      obj->query_base_stat("con")) + 20);
+   obj->set_title("$N " + query_level_title(level));
+   obj->set_expr(tmpexp);
+   obj->set_hp(obj->query_max_hp());
+   obj->set_end(obj->query_max_end());
+   obj->set_mana(obj->query_max_mana());
+   obj->set_internal_max_weight((15 + this_object()->query_base_stat("str")) * 100);
 }
 
 void increase_level(void) {
+   object obj;
+   obj = this_object();
+
    level += 1;
-   this_object()->set_max_hp((level *
-      this_object()->query_base_stat("str")) + 20);
-   this_object()->set_max_mana((level *
-      this_object()->query_base_stat("wis")) + 20);
-   this_object()->set_max_end((level *
-      this_object()->query_base_stat("con")) + 20);
-   this_object()->set_internal_max_weight((15 + this_object()->query_base_stat("str")) * 100);
-   this_object()->set_title("$N " + query_level_title(level));
+
+      obj->set_max_hp((level *
+      obj->query_base_stat("str")) + 20);
+   obj->set_max_mana((level *
+      obj->query_base_stat("wis")) + 20);
+   obj->set_max_end((level *
+      obj->query_base_stat("con")) + 20);
+   obj->set_title("$N " + query_level_title(level));
+   obj->set_hp(obj->query_max_hp());
+   obj->set_end(obj->query_max_end());
+   obj->set_mana(obj->query_max_mana());
+   obj->set_internal_max_weight((15 + this_object()->query_base_stat("str")) * 100);
 }
 
 void increase_expr(int expr) {
@@ -126,7 +144,7 @@ void increase_expr(int expr) {
    while (ready_for_next_level()) {
       increase_level();
       write("Congratulations, you just went up a level...\n");
-      CHANNEL_D->chan_send_string("announce", "", this_player()->query_name() +" has reached level " + level, 1);
+      CHANNEL_D->chan_send_string("announce", "", this_object()->query_name() +" has reached level " + level, 1);
       this_object()->set_title("$N " + query_level_title(level));
    }
 }
