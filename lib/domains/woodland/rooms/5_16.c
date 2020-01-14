@@ -15,5 +15,8 @@ void setup(void) {
      "north" : "/domains/woodland/rooms/5_15",
      "south" : "/domains/required/rooms/start"
    ]));
+   set_objects(
+    DIR+"/obj/sign.c"
+  );
 }
 
