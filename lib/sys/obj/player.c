@@ -58,6 +58,7 @@ int verbose_errors;     /* 1 for longer error codes */
 int display_caught;     /* 1 to show caught runtime errors */
 static mixed menu_data;		/* temp storage for menu system */
 int muzzle;			/* if 0 we are allowed to shout. */
+int * woodland_kills;   /* Tracks killed woodland critters */
 
 string query_name(void);
 
@@ -154,6 +155,14 @@ int query_ansi(void) {
 void set_ansi(int state) {
    ansi = state;
    save_me();
+}
+
+int *get_woodland_kills(void) {
+  return woodland_kills;
+}
+
+void set_woodland_kills(int * flag) {
+   woodland_kills = flag;
 }
 
 void create(void) {

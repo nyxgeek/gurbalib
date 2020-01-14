@@ -15,6 +15,10 @@ string *query_quests_completed(void) {
    return quests;
 }
 
+int clear_completed_quests() {
+  quests = ({ });
+}
+
 int add_completed_quest(string quest) {
    int x, s;
 

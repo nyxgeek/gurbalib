@@ -8,7 +8,7 @@ area="woodland"
 
 room_array = []
 dimensions = ["12", "16"]
-mob_array = ["deer", "rabbit", "snake", "bear", "porcupine", "moose", "beaver", "rat", "deer"]
+mob_array = ["squirrel", "rabbit", "beaver", "bear", "porcupine", "skunk", "chipmunk", "mouse", "raccoon", "chickadee", "wolf", "fox", "badger", "grouse", "mole", "unicorn", "coyote"]
 room_mobs = []
 
 fh = open(genpath + '/exits')
@@ -51,7 +51,9 @@ for line in fh:
 
 fh.close()
 
+mob_count = -1
 for mob in room_mobs:
+  mob_count = mob_count + 1
   gender=["male", "female"]
   mobfile = open(mobpath + "/" + mob[1] + ".c", "w")
   mobfile.write('inherit "/std/monster";\n')
@@ -69,15 +71,34 @@ for mob in room_mobs:
   mobfile.write('   set_skill("combat/unarmed", ' + str(20 * moblevel) + ');\n')
   mobfile.write('   set_skill("combat/defense", ' + str(20 * moblevel) + ');\n')
   mobfile.write('   set_level(' + str(moblevel) + ');\n')
-  mobfile.write('}\n')
+  mobfile.write('}\n\n')
+  mobfile.write('void monster_died(void) {\n')
+  mobfile.write('  object usr;\n')
+  mobfile.write('  int *wlf;\n')
+  mobfile.write('  int results;\n')
+  mobfile.write('  usr = this_player();\n')
+  mobfile.write('  if (usr->is_completed_quest("Woodland")) {\n')
+  mobfile.write('    return;\n')
+  mobfile.write('  }\n')
+  mobfile.write('  wlf = usr->get_woodland_kills();\n')
+  mobfile.write('  if(!wlf) {\n')
+  mobfile.write('    wlf = (( { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } ));\n')
+  mobfile.write('  }\n')
+  mobfile.write('  if(wlf[' + str(mob_count) + '] != 1) {\n')
+  mobfile.write('    wlf[' + str(mob_count) + '] = 1;\n')
+  mobfile.write('    results = wlf[0] + wlf[1] + wlf[2] + wlf[3] + wlf[4] + wlf[5] + wlf[6] + wlf[7] + wlf[8] + wlf[9] + wlf[10] + wlf[11] + wlf[12] + wlf[13] + wlf[14] + wlf[15] + wlf[16];\n')
+  mobfile.write('    usr->set_woodland_kills(wlf);\n')
+  mobfile.write('  }\n')
+  mobfile.write('}')
   mobfile.close()
+
 
 for rn in room_array:
   roomname = rn[0]
   exit_array = rn[1]
   room_moblist = [s for s in room_mobs if roomname in s]
   if room_moblist:
-    print room_moblist
+    print (room_moblist)
   coords = roomname.split("_")
   rshort = "Woodland"
   rlong = "This is sprawling woodland, trees can be seen everywhere while critters can be heard in the distance. "
@@ -93,6 +114,19 @@ for rn in room_array:
   # add room desc plus color code eventually
   roomfile.write('  set_short( "' + rshort + '" );\n')
   roomfile.write('  set_long( "' + rlong + '" );\n\n')
+
+  if room_moblist:
+    mobnum = 0
+    mobcount = len(room_moblist)
+    roomfile.write('  set_objects(\n')
+    for mob in room_moblist:
+      mobnum += 1
+      if mobcount == mobnum:
+        roomfile.write('    DIR+"/npc/' + mob[1] + '.c"\n')
+      else:
+        roomfile.write('    DIR+"/npc/' + mob[1] + '.c",\n')
+    roomfile.write('  );\n')
+
   if exit_array:
     roomfile.write(' set_exits( ([\n')
     exitcount = len(exit_array)
@@ -105,17 +139,14 @@ for rn in room_array:
       else:
         roomfile.write('  "' + rexit[0] + '" : ' + 'DIR+"/rooms/' + rexit[1] + '.c",\n')
     roomfile.write('  ]) );\n\n')
+
     # end code here
-    roomfile.write('}\n\n')
+  roomfile.write('}\n\n')
     # do search code to find mob
-    if room_moblist:
-      roomfile.write('int do_search(void) {\n')
-      roomfile.write('   object mob;\n')
-      for mob in room_moblist:
-        roomfile.write('   mob = clone_object(DIR + "/npc/' + mob[1] + '");\n')
-        roomfile.write('   mob->setup();\n')
-        roomfile.write('   mob->move(this_player()->query_environment());\n')
-        roomfile.write('   mob->attack(this_player());\n\n')
-      roomfile.write('   return 1;\n}\n')
-      roomfile.close
+  if room_moblist:
+    roomfile.write('int do_search(void) {\n')
+    roomfile.write('   this_environment()->setup();')
+    roomfile.write('   write("An animal appears out of the woodwork");')
+    roomfile.write('   return 1;\n}\n')
+    roomfile.close
 
