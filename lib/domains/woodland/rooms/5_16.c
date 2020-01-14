@@ -1,4 +1,5 @@
 inherit "/std/room";
+#include "../domain.h"
 
 void setup(void) {
 
