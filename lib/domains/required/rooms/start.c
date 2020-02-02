@@ -11,6 +11,7 @@ void setup(void) {
    set_short("A large open field");
    set_long("You are in a large open field.");
    set_exits(([
-     "north" : "/domains/woodland/rooms/5_16.c"
+     "north" : "/domains/woodland/rooms/5_16.c",
+     "west" : "/domains/cyphercon/rooms/start.c"
    ]));
 }

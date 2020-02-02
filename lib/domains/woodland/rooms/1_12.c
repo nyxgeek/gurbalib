@@ -11,8 +11,8 @@ void setup( void ) {
   set_short( "Woodland" );
   set_long( "This is sprawling woodland, trees can be seen everywhere while critters can be heard in the distance. Animal prints can be seen on the ground." );
 
-  set_objects(
-    DIR+"/npc/raccoon.c"
+  add_item("prints", "animal prints, perhaps you should %^MAGENTA%^search%^RESET%^here");  set_objects(
+    DIR+"/npc/wolf.c"
   );
  set_exits( ([
   "northwest" : DIR+"/rooms/0_11.c",

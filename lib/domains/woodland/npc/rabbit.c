@@ -8,9 +8,9 @@ void setup( void ) {
    set_gender("female");
    set_race("rabbit");
    set_hit_skill("combat/unarmed");
-   set_skill("combat/unarmed", 20);
-   set_skill("combat/defense", 20);
-   set_level(1);
+   set_skill("combat/unarmed", 40);
+   set_skill("combat/defense", 40);
+   set_level(2);
 }
 
 void monster_died(void) {

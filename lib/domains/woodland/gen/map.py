@@ -10,6 +10,7 @@ room_array = []
 dimensions = ["12", "16"]
 mob_array = ["squirrel", "rabbit", "beaver", "bear", "porcupine", "skunk", "chipmunk", "mouse", "raccoon", "chickadee", "wolf", "fox", "badger", "grouse", "mole", "unicorn", "coyote"]
 room_mobs = []
+level_range = [1, 5]
 
 fh = open(genpath + '/exits')
 
@@ -66,7 +67,7 @@ for mob in room_mobs:
   mobfile.write('   set_race("' + mob[1] + '");\n')
   seed(randint(0, 16))
   seed(randint(0, 16))
-  moblevel = randint(1, 3)
+  moblevel = randint(level_range[0], level_range[1])
   mobfile.write('   set_hit_skill("combat/unarmed");\n')
   mobfile.write('   set_skill("combat/unarmed", ' + str(20 * moblevel) + ');\n')
   mobfile.write('   set_skill("combat/defense", ' + str(20 * moblevel) + ');\n')
@@ -118,6 +119,7 @@ for rn in room_array:
   if room_moblist:
     mobnum = 0
     mobcount = len(room_moblist)
+    roomfile.write('  add_item("prints", "animal prints, perhaps you should %^MAGENTA%^search%^RESET%^here");')
     roomfile.write('  set_objects(\n')
     for mob in room_moblist:
       mobnum += 1

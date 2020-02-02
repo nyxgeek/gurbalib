@@ -43,10 +43,10 @@ void _open(mixed * tls) {
       status()[ST_VERSION] + ".\n");
    send_message("\n");
    send_message(TELNET_D->query_banner());
-   send_message("\nEnter your name (or 'who', 'guest', 'quit'): ");
+   send_message("\nEnter your name ('quit'): ");
    send_message(1);
 
-   timeout_handle = call_out("login_timeout", 600);
+   timeout_handle = call_out("login_timeout", 120);
    player = clone_object(PLAYER_OB);
    player->set_user(this_object());
    player->initialize_cmd_path();
@@ -462,20 +462,12 @@ void input_name(string str) {
       player->set_name("who");
       login_who();
       str = "";
-   }  else if (lowercase(str) == "guest") {
-      usr = "guest";
-      while (USER_D->find_user(usr) ) {
-         i++;
-         usr = "guest" + (string) i;
-         }
-      player->set_name(usr);
-      user_name = usr;
-
-      /* Skip ahead for the guest user, no need for password and other stuff */
-      send_message("Please enter your gender (male/female/neuter) : ");
-      player->input_to_object(this_object(), "input_get_gender");
+   } else if (lowercase(str) == "guest") {
+      write("Goodbye!!!\n");
+      destruct_object(player);
+      destruct_object(this_object());
       return;
-   } 
+   }
 
    if (!str || str == "") {
       send_message("\r\nPlease enter your name : ");
@@ -651,9 +643,8 @@ void input_check_passwd(string str) {
       player->input_to_object(this_object(), "input_check_passwd");
    } else {
       if (USER_D->login(user_name, str)) {
-         send_message("\nPlease enter your real name : ");
-         send_message(1);
-         player->input_to_object(this_object(), "input_get_real_name");
+         send_message("\nPlease enter your gender (male/female/other) : ");
+         player->input_to_object(this_object(), "input_get_gender");
       } else {
          send_message("\nThe passwords don't match.\n");
          send_message("Goodbye!!!\n");
@@ -664,29 +655,10 @@ void input_check_passwd(string str) {
    }
 }
 
-void input_get_real_name(string str) {
-   player->set_realname(str);
-
-   send_message("Please enter your email address : ");
-   player->input_to_object(this_object(), "input_get_email");
-}
-
-void input_get_email(string str) {
-   player->set_email(str);
-   send_message("Please enter your website : ");
-   player->input_to_object(this_object(), "input_get_website");
-}
-
-void input_get_website(string str) {
-   player->set_website(str);
-
-   send_message("\nEnter your gender (male/female/neuter) : ");
-   player->input_to_object(this_object(), "input_get_gender");
-}
 
 void input_get_gender(string str) {
    if (!str || str == "") {
-      send_message("Please enter your gender (male/female/neuter) : ");
+      send_message("Please enter your gender (male/female/other) : ");
       player->input_to_object(this_object(), "input_get_gender");
       return;
    }
@@ -696,16 +668,16 @@ void input_get_gender(string str) {
       player->set_gender("male");
    } else if (str == "f" || str == "female") {
       player->set_gender("female");
-   } else if (str == "n" || str == "neuter") {
-      player->set_gender("neuter");
+   } else if (str == "o" || str == "other") {
+      player->set_gender("other");
    } else if (str == "quit") {
       write("Goodbye!!!\n");
       destruct_object(player);
       destruct_object(this_object());
       return;
    } else {
-      send_message("Please use 'male', 'female' or 'neuter'.\n");
-      send_message("Please enter your gender (male/female/neuter) : ");
+      send_message("Please use 'male', 'female' or 'other'.\n");
+      send_message("Please enter your gender (male/female/other) : ");
       player->input_to_object(this_object(), "input_get_gender");
       return;
    }
@@ -741,7 +713,7 @@ void input_get_race(string str) {
          return;
       }
    }
-         
+
    if (!RACE_D->is_race(str)) {
       send_message("Please choose one of the races, or type 'info <race>' : ");
       player->input_to_object(this_object(), "input_get_race");

@@ -8,9 +8,9 @@ void setup( void ) {
    set_gender("male");
    set_race("badger");
    set_hit_skill("combat/unarmed");
-   set_skill("combat/unarmed", 20);
-   set_skill("combat/defense", 20);
-   set_level(1);
+   set_skill("combat/unarmed", 60);
+   set_skill("combat/defense", 60);
+   set_level(3);
 }
 
 void monster_died(void) {
@@ -25,8 +25,8 @@ void monster_died(void) {
   if(!wlf) {
     wlf = (( { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } ));
   }
-  if(wlf[12] != 1) {
-    wlf[12] = 1;
+  if(wlf[5] != 1) {
+    wlf[5] = 1;
     results = wlf[0] + wlf[1] + wlf[2] + wlf[3] + wlf[4] + wlf[5] + wlf[6] + wlf[7] + wlf[8] + wlf[9] + wlf[10] + wlf[11] + wlf[12] + wlf[13] + wlf[14] + wlf[15] + wlf[16];
     usr->set_woodland_kills(wlf);
   }
