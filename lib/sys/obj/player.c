@@ -59,6 +59,8 @@ int display_caught;     /* 1 to show caught runtime errors */
 static mixed menu_data;		/* temp storage for menu system */
 int muzzle;			/* if 0 we are allowed to shout. */
 int * woodland_kills;   /* Tracks killed woodland critters */
+int * cypher_codes; /* tracks entered cyphercon codes */
+
 
 string query_name(void);
 
@@ -161,8 +163,16 @@ int *get_woodland_kills(void) {
   return woodland_kills;
 }
 
+int *get_cypher_codes(void) {
+  return cypher_codes;
+}
+
 void set_woodland_kills(int * flag) {
    woodland_kills = flag;
+}
+
+void set_cypher_codes(int * flag) {
+   cypher_codes = flag;
 }
 
 void create(void) {
