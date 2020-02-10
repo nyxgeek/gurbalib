@@ -29,14 +29,17 @@ void setup( void ) {
 }
 
 int do_push(string arg) {
+  int * key_tracker; /* tracks 8 keys from quest */
+  object player; /* tracks player*/
+  player = this_player();
+  key_tracker = player->get_key_tracker();
    if (arg == "button") {
-      object obj;
-
-      write("You push the button and out of nowhere a new key appears.\n");
-
-      obj = clone_object(DIR+"/objects/key7.c");
-      obj->setup();
-      obj->move(this_player()->query_environment());
+      write("You push the button and your key tracker is updated\n");
+      if (!key_tracker) {
+        key_tracker = (( { 0, 0, 0, 0, 0, 0, 0, 0 } ));
+      }
+        key_tracker[0] = 1;
+        player->set_key_tracker(( { key_tracker[0], key_tracker[1], key_tracker[2], key_tracker[3], key_tracker[4], key_tracker[5], key_tracker[6], key_tracker[7] } ));
       return 1;
    } else {
       return 0;

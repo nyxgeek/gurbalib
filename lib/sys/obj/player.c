@@ -79,7 +79,7 @@ static mixed menu_data;		/* temp storage for menu system */
 int muzzle;			/* if 0 we are allowed to shout. */
 int * woodland_kills;   /* Tracks killed woodland critters */
 int * cypher_codes; /* tracks entered cyphercon codes */
-
+int * key_tracker; /* tracks 8 keys from quest */
 
 string query_name(void);
 
@@ -178,12 +178,12 @@ void set_ansi(int state) {
    save_me();
 }
 
-int query_mxp(void) {
-   return mxp;
-}
-
 int *get_woodland_kills(void) {
   return woodland_kills;
+}
+
+int *get_key_Tracker(void) {
+  return key_tracker;
 }
 
 
@@ -199,15 +199,14 @@ void set_cypher_codes(int * flag) {
    cypher_codes = flag;
 }
 
+void set_key_tracker(int * flag) {
+   key_tracker = flag;
+}
+
 
 int query_mxp(void) {
    return mxp;
 }
-
-int *get_woodland_kills(void) {
-  return woodland_kills;
-}
-
 
 
 int query_lastpaid(void) {
