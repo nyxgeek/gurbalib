@@ -35,6 +35,7 @@ void create(void) {
          "language/grunt",
          "spell/cure",
          "spell/missile",
+         "spell/wizard",
          "value",
       } );
 

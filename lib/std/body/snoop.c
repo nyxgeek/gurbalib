@@ -61,8 +61,6 @@ void add_snoopee(object pPlayer) {
    if (!pSnoopees) {
       pSnoopees = ( { } );
    }
-   this_object()->message("%^RED%^You are now being snooped by " +
-      pPlayer->query_Name() + ".%^RESET%^");
    pSnoopees += ( { pPlayer } );
 }
 
@@ -71,8 +69,6 @@ void remove_snoopee(object pPlayer) {
       pSnoopees = ( { } );
    }
    pSnoopees -= ( { pPlayer } );
-   this_object()->message("%^RED%^You are no longer being snooped by " +
-      pPlayer->query_Name() + ".%^RESET%^");
 }
 
 void add_snooping(object pPlayer) {

@@ -14,7 +14,7 @@ int set_currency(string str) {
 
 string query_currency(void) {
    if (!currency) {
-      return "ducat";
+      return "credit";
    }
    return currency;
 }
@@ -69,11 +69,13 @@ int is_money(void) {
 /* Setup some reasonable defaults.... */
 void create(void) {
    ::create();
-   set_currency("ducat");
+   set_currency("credit");
    set_amount(1);
 
    set_id("coin");
    add_id("coins");
+   add_id("credits");
+   add_id("credit");
    set_gettable(1);
    set_value(1);
 }

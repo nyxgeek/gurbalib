@@ -64,7 +64,20 @@ static void main(string str) {
       write("You feel a shimmering light warm your entire body.");
       this_player()->query_environment()->tell_room(this_player(), 
          "A shimmering light envelopes " + this_player()->query_Name() + ".");
-      this_player()->set_hp(1);
-      this_player()->set_dead(0);
+      if (this_player()->query_deathproof() == 1) {
+         write("%^GREEN%^%^BOLD%^You have been saved by the grace of EvilMog and are immune from penalties.%^RESET%^");
+         this_player()->set_deathproof(0);
+         this_player()->set_dead(0);
+         this_player()->set_hp(1);
+         write("%^RED%^%^BOLD%^You are no longer deathproof!!!%^RESET%^");
+      } else {
+/*        write("%^BOLD%^%^RED%^Since you are not deathproof you have been reset to level 1 with no experience, maybe you should buy insurance.%^RESET%^"); */
+        write("%^RED%^The game has had its permadeath adjusted so you will no longer be reset to level 1, instead you will only lose 1 level if you level is greater than 2%^RESET%^");
+        this_player()->set_hp(1);
+        this_player()->set_dead(0);
+        if (this_player()->query_level() > 2) {
+          this_player()->set_level((this_player()->query_level()) - 1);
+        }
+      }
    }
 }

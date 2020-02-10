@@ -225,6 +225,7 @@ void die(void) {
       this_object()->move(VOID);
       this_object()->message("You have died.");
       this_object()->clear_money();
+      CHANNEL_D->chan_send_string("announce", "", this_object()->query_name() +" has died", 1);
    } else {
       if (this_object()<-"/std/monster") {
          this_object()->monster_died();

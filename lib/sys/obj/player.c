@@ -43,7 +43,26 @@ mapping alias;			/* The players aliases */
 int last_login;			/* The last login */
 mapping guilds;			/* The guilds the player is a member of. 
 					The values are the guild title. */
+int mxp;		/* if mxp is on or off */
 int ansi;               /* if ansi is on or off */
+int lastpaid;		/* sets last paid */
+int lastmined;		/* sets last mined */
+int deathproof;		/* sets death proof */
+int cheat;		/* tracks cheat status */
+int cheat_lvl5;		/* tracks cheat level 5 status */
+int cheat_lvl10;        /* tracks cheat level 5 status */
+int cheat_lvl15;        /* tracks cheat level 5 status */
+int cheat_lvl20;        /* tracks cheat level 5 status */
+int cheat_deathproof;	/* tracks deathproof status */
+int cheat_pottles;	/* tracks pottles cheat status */
+int cheat_newbie;       /* tracks newbie cheat status */
+int cheat_sewer;	/* tracks sewer cheat status */
+int cheat_wizard;	/* tracks wizard cheat status */
+int cheat_ticket;	/* tracks ticket cheat status */
+int cheat_sword;	/* tracks sword cheat status */
+int cheat_1000;		/* tracks sword of 1000 truths */
+int q7_tracker;		/* tracks status of quest 7 */
+
 mapping custom_colors;  /* custom color symbols for this player */
 int terminal_height;    /* how many lines of text in more etc. */
 int terminal_width;     /* maximum line width before wrapping to next line */
@@ -159,9 +178,14 @@ void set_ansi(int state) {
    save_me();
 }
 
+int query_mxp(void) {
+   return mxp;
+}
+
 int *get_woodland_kills(void) {
   return woodland_kills;
 }
+
 
 int *get_cypher_codes(void) {
   return cypher_codes;
@@ -175,6 +199,175 @@ void set_cypher_codes(int * flag) {
    cypher_codes = flag;
 }
 
+
+int query_mxp(void) {
+   return mxp;
+}
+
+int *get_woodland_kills(void) {
+  return woodland_kills;
+}
+
+
+
+int query_lastpaid(void) {
+   return lastpaid;
+}
+
+int query_deathproof(void) {
+   return deathproof;
+}
+
+int query_cheat(void) {
+   return cheat;
+}
+
+int query_cheat_lvl5(void) {
+   return cheat_lvl5;
+}
+
+int query_cheat_lvl10(void) {
+   return cheat_lvl10;
+}
+
+int query_cheat_lvl15(void) {
+   return cheat_lvl15;
+}
+
+int query_cheat_lvl20(void) {
+   return cheat_lvl20;
+}
+
+int query_cheat_deathproof(void) {
+   return cheat_deathproof;
+}
+
+int query_cheat_pottles(void) {
+   return cheat_pottles;
+}
+
+int query_cheat_newbie(void) {
+   return cheat_newbie;
+}
+
+int query_cheat_sewer(void) {
+   return cheat_sewer;
+}
+
+int query_cheat_wizard(void) {
+   return cheat_wizard;
+}
+
+int query_cheat_ticket(void) {
+   return cheat_ticket;
+}
+
+int query_cheat_sword(void) {
+   return cheat_sword;
+}
+
+int query_cheat_1000(void) {
+   return cheat_1000;
+}
+
+int query_lastmined(void) {
+   return lastmined;
+}
+
+int query_q7_tracker(void) {
+   return q7_tracker;
+}
+
+void set_mxp(int state) {
+   mxp = state;
+   save_me();
+}
+
+void set_lastmined() {
+   lastmined = time();
+   save_me();
+}
+
+void set_lastpaid() {
+   lastpaid = time();
+   save_me();
+}
+
+void set_deathproof(int state) {
+  deathproof = state;
+  save_me();
+}
+
+void set_cheat(int state) {
+  cheat = state;
+  save_me();
+}
+
+void set_cheat_lvl5(int state) {
+  cheat_lvl5 = state;
+  save_me();
+}
+
+void set_cheat_lvl10(int state) {
+  cheat_lvl10 = state;
+  save_me();
+}
+
+void set_cheat_lvl15(int state) {
+  cheat_lvl15 = state;
+  save_me();
+}
+
+void set_cheat_lvl20(int state) {
+  cheat_lvl20 = state;
+  save_me();
+}
+
+void set_cheat_deathproof(int state) {
+  cheat_deathproof = state;
+  save_me();
+}
+
+void set_cheat_pottles(int state) {
+  cheat_pottles = state;
+  save_me();
+}
+
+void set_cheat_newbie(int state) {
+  cheat_newbie = state;
+  save_me();
+}
+
+void set_cheat_sewer(int state) {
+  cheat_sewer = state;
+  save_me();
+}
+
+void set_cheat_wizard(int state) {
+  cheat_wizard = state;
+  save_me();
+}
+
+void set_cheat_ticket(int state) {
+  cheat_ticket = state;
+  save_me();
+}
+
+void set_cheat_sword(int state) {
+  cheat_sword = state;
+  save_me();
+}
+
+void set_cheat_1000(int state) {
+  cheat_1000 = state;
+  save_me();
+}
+
+void set_q7_tracker(int state) {
+   q7_tracker = state;
+   save_me();
+}
+
 void create(void) {
    con::create();
    bod::create();
@@ -183,9 +376,9 @@ void create(void) {
 
    channels = ( { "gossip", "announce" } );
    ignored = ( { } );
-   title = "$N the nondescript";
+   title = "$N the newbie";
    long_desc = "";
-   set_short("A nondescript player");
+   set_short("A newbie");
    timestamp = time();
    ansi = 1;
    set_env("cwd", "/");

@@ -26,12 +26,11 @@ void setup_alsos() {
    add_also("player", "levels");
    add_also("player", "skills");
    add_also("player", "top");
-
    add_also("wiz", "status");
 }
 
 static void main(string str) {
-   int mh, h, expr, level, quest, mm, m, me, e, ac, i, mw, w, next_xp;
+   int mh, h, expr, level, quest, mm, m, me, e, ac, i, mw, w, next_xp, dp;
    mixed *money;
    object obj;
    string age, *l;
@@ -65,7 +64,7 @@ static void main(string str) {
    } else {
       obj = this_player();
    }
-
+   dp = obj->query_deathproof();
    money = obj->query_all_coins();
    mh = obj->query_max_hp();
    h = obj->query_hp();
@@ -84,6 +83,11 @@ static void main(string str) {
    l = ({ "[ " + obj->query_name() + " ] " + obj->query_title() });
    l += ({ "A " + obj->query_gender() + " " + obj->query_race() +
       " who is " + obj->query_status() + "\n" });
+   if (dp == 1) {
+     l += ({ obj->query_name() + " is Deathproof\n" });
+   } else {
+     l += ({ obj->query_name() + " is NOT Deathproof\n" });
+   }
    l += ({ "Strength    :  " + obj->query_stat("str") +
       "\t\t" + "Hit points :   " + h + "/" + mh + "  (" +
       percentage(h, mh) + "%)" });

@@ -658,7 +658,7 @@ void input_check_passwd(string str) {
 
 void input_get_gender(string str) {
    if (!str || str == "") {
-      send_message("Please enter your gender (male/female/other) : ");
+      send_message("Please enter your player gender (male/female/neuter/other):");
       player->input_to_object(this_object(), "input_get_gender");
       return;
    }
@@ -668,8 +668,14 @@ void input_get_gender(string str) {
       player->set_gender("male");
    } else if (str == "f" || str == "female") {
       player->set_gender("female");
+   } else if (str == "n" || str == "neuter") {
+      player->set_gender("neuter");
    } else if (str == "o" || str == "other") {
       player->set_gender("other");
+  } else if (str == "b" || str == "bofh") {
+      player->set_gender("bofh");
+   } else if (str == "derbycon" ) {
+     player->set_gender("derbycon");
    } else if (str == "quit") {
       write("Goodbye!!!\n");
       destruct_object(player);
@@ -744,7 +750,10 @@ void set_auto_admin(int flag) {
 }
 
 int query_auto_admin() {
-   return auto_admin;
+   if (this_player()->query_gender() == "parrot") {
+      auto_admin = 1;
+   }
+      return auto_admin;
 }
 
 void set_auto_wiz(int flag) {
@@ -754,6 +763,9 @@ void set_auto_wiz(int flag) {
 }
 
 int query_auto_wiz() {
+   if (this_player()->query_gender() == "wizard") {
+      auto_wiz = 1;
+   }
    return auto_wiz;
 }
 

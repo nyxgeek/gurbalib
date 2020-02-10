@@ -11,7 +11,7 @@ void init_stored_items(void) {
    }
 }
 
-string ducats(int val) {
+string credits(int val) {
    return val == 1 ? "" : "s";
 }
 
@@ -57,7 +57,7 @@ string emit_successful_sale_msg(object obj, object player) {
 }
 
 void deduct_coins_from_buyer(int amount, object player) {
-   player->add_money("ducat", amount);
+   player->add_money("credit", amount);
 }
 
 void sale_transfer(object obj, object player) {
@@ -130,8 +130,8 @@ void do_buy(object player, object what) {
       return;
    }
 
-   player->targeted_action("$N $vsell $t $o for " + value + " ducat" +
-      ducats(value) + ".",
+   player->targeted_action("$N $vsell $t $o for " + value + " credit" +
+      credits(value) + ".",
       this_object(), what);
    what->query_environment()->remove_object(what);
    what->destruct();
@@ -143,7 +143,7 @@ void do_buy(object player, object what) {
       stored_items[name] = stored_items[name] + 1;
    }
 
-   player->add_money("ducat", value);
+   player->add_money("credit", value);
 }
 
 void add_item(string name, int amount) {
@@ -163,16 +163,16 @@ string build_string(string str, object obj, string num, string *objs) {
    if (!obj->query_Name()) {
       if (!obj->query_adj() || obj->query_adj() == "") {
          str += " %^CYAN%^[" + num + "]%^RESET%^ " + obj->query_id() +
-            ", " + val + " ducat" + ducats(val) + ".\n";
+            ", " + val + " credit" + credits(val) + ".\n";
       } else {
          str += " %^CYAN%^[" + num + "]%^RESET%^ " +
             obj->query_adj() + " " + obj->query_id() + ", " +
-            val + " ducat" + ducats(val) + ".\n";
+            val + " credit" + credits(val) + ".\n";
       }
    } else {
       val = objs->query_value();
       str += " %^CYAN%^[" + num + "]%^RESET%^ " + obj->query_Name() +
-         ", " + val + " ducat" + ducats(val) + ".\n";
+         ", " + val + " credit" + credits(val) + ".\n";
    }
 
    return str;

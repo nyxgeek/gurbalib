@@ -72,7 +72,7 @@ static void main(string str) {
       return;
    }
 
-   if (obj->is_player()) {
+  if (obj->is_player()) {
       if (obj->query_environment()->query_pk() == 0) {
          write("You cannot kill other players");
          return;

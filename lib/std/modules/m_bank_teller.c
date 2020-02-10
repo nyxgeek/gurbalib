@@ -15,7 +15,7 @@ int do_balance(varargs string str) {
    int amount;
 
    amount = this_player()->query_bank();
-   write("Your current balance is: " + amount + " ducats.\n");
+   write("Your current balance is: " + amount + " credits.\n");
    return 1;
 }
 
@@ -28,9 +28,9 @@ int do_withdraw(string str) {
          return 1;
          }
       if (this_player()->withdraw(amount)) {
-          write("You withdraw " + amount + " ducats from the bank.\n");
+          write("You withdraw " + amount + " credits from the bank.\n");
       } else {
-          write("You do not have " + amount + " ducats in the bank.\n");
+          write("You do not have " + amount + " credits in the bank.\n");
       }
       do_balance();
       return 1;
@@ -49,9 +49,9 @@ int do_deposit(string str) {
          return 1;
          }
       if (this_player()->deposit(amount)) {
-          write("You deposit " + amount + " ducats in the bank.\n");
+          write("You deposit " + amount + " credits in the bank.\n");
       } else {
-          write("You do not have " + amount + " ducats.\n");
+          write("You do not have " + amount + " credits.\n");
       }
       do_balance();
       return 1;
@@ -66,8 +66,8 @@ int do_loan(string str) {
 
    if (query_wizard(this_player())) {
       if (sscanf(str, "%d", amount)) {
-         this_player()->add_money("ducat", amount);
-         write("The bank loans you " + amount + " ducats.\n");
+         this_player()->add_money("credit", amount);
+         write("The bank loans you " + amount + " credits.\n");
          return 1;
       } else {
          write("Usage: loan (amount)\n");

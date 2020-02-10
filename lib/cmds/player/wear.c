@@ -113,7 +113,16 @@ static void main(string str) {
       return;
    }
 
+   /*
+    * BUG: present() doesn't actually scan container contents using the verb
+    * lookups used everywhere else and thus can't handle adjectives for specific
+    * item identification
+    */
    obj = this_player()->present(lowercase(str));
+   if (!obj) {
+     write("Can't figure out what item you're talking about (try without adjectives)");
+     return;
+   }
    if (obj->wear_hook(this_player())) {
       do_wear(obj, 1);
    }

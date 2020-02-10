@@ -1,12 +1,16 @@
 #include <type.h>
 
 inherit cont "/std/container";
+inherit "/std/modules/m_block_exits";
 
 static mapping exits, hidden_exits, areas, items;
 static int last_exit, weather, light, pk, nokill;
 static int * coords, * dimensions, * map_start;
 
 string dark_msg, domain_name;
+int door_closed;
+int locked;
+string key;
 
 void setup(void);
 
@@ -67,7 +71,7 @@ private int object_is_lighted(object obj) {
       objs = obj->query_inventory();
       for (i = 0, dim = sizeof(objs); i < dim; i++) {
          if (objs[i]->functionp("query_lit")) {
-            if (objs[i]->query_lit()) {
+            if (objs[i]->query_list()) {
                return 1;
             }
          }
@@ -247,18 +251,23 @@ string query_desc(varargs int brief) {
       }
    }
 
-   text += "%^ROOM_NAME%^\t" + query_short() + "%^RESET%^\n";
-   text += "%^ROOM_DESC%^" + query_long() + "%^RESET%^\n";
-   text += "%^ROOM_EXIT%^[ Obvious exits: ";
+   text += "%^ROOM_NAME%^" + query_short() + "%^RESET%^\n\n";
+   text += "%^ROOM_DESC%^" + query_long() + "%^RESET%^\n\n";
+   text += "%^WHITE%^%^BOLD%^Exits: %^RESET%^";
 
    if (!exits || map_sizeof(exits) == 0) {
       text += "none ";
    } else {
       for (count = 0; count < map_sizeof(exits); count++) {
-         text += map_indices(exits)[count] + " ";
+          if (count < (map_sizeof(exits) - 1)) {
+              text += map_indices(exits)[count] + ", ";
+          }
+          else {
+              text += map_indices(exits)[count];
+          }
       }
    }
-   text += "]%^RESET%^\n";
+   text += "%^RESET%^\n";
 
    inventory = query_inventory();
 
@@ -624,4 +633,126 @@ void create(void) {
    last_exit = 0;
    light = 1;
    setup();
+}
+
+string look_door() {
+   if (!door_closed) {
+      return "The door is open.";
+   }
+   return "The door is closed.";
+}
+
+int open_door() {
+   if (locked) {
+      write("The door is locked.\n");
+      tell_room(this_player(), this_player()->query_Name() +
+         " fiddles with the locked door.\n");
+   } else if (door_closed) {
+      door_closed = 0;
+      write("You open the door.\n");
+      tell_room(this_player(), this_player()->query_Name() +
+         " opens the door.\n");
+   } else {
+      write("The door is already open.\n");
+      tell_room(this_player(), this_player()->query_Name() +
+         " fiddles with the open door.\n");
+   }
+   return 1;
+}
+
+int close_door() {
+   if (door_closed) {
+      write("The door is already closed.\n");
+      tell_room(this_player(), this_player()->query_Name() +
+         " fiddles with the closed door.\n");
+   } else {
+      door_closed = 1;
+      write("You close the door.\n");
+      tell_room(this_player(), this_player()->query_Name() +
+         " closes door.\n");
+   }
+   return 1;
+}
+
+int has_key(string str) {
+   object obj;
+
+   obj = this_player()->present(str);
+
+   if (obj) {
+      return 1;
+   }
+   return 0;
+}
+
+int lockpick_door() {
+  if (!locked) {
+    locked = 1;
+    door_closed = 1;
+    return 1;
+  }
+  if (locked) {
+   locked = 0;
+   door_closed = 0;
+   return 1;
+  }
+}
+
+int unlock_door() {
+   if (!locked) {
+      write("The door is already unlocked.\n");
+      tell_room(this_player(), this_player()->query_Name() +
+         " fiddles with the door.\n");
+   } else if (has_key(key)) {
+      write("You unlock the door.\n");
+      tell_room(this_player(), this_player()->query_Name() +
+         " unlocks the door.\n");
+      locked = 0;
+   } else {
+      write("You can't find the key for that door.\n");
+      tell_room(this_player(), this_player()->query_Name() +
+         " fiddles with the door.\n");
+   }
+}
+
+int lock_door() {
+   if (locked) {
+      write("The door is already locked.\n");
+      tell_room(this_player(), this_player()->query_Name() +
+         " fiddles with the door.\n");
+   } else if (!door_closed) {
+      write("The door is open, you can't lock it when it's open.\n");
+      tell_room(this_player(), this_player()->query_Name() +
+         " fiddles with the door.\n");
+   } else if (has_key(key)) {
+      write("You lock the door.\n");
+      tell_room(this_player(), this_player()->query_Name() +
+         " locks the door.\n");
+      locked = 1;
+   } else {
+      write("You can't find the key for that door.\n");
+      tell_room(this_player(), this_player()->query_Name() +
+         " fiddles with the door.\n");
+   }
+}
+
+int enter_door() {
+   if (!door_closed) {
+      return 1;
+   }  else if (has_key(key)) {
+      return 1;
+   } else {
+      write("The door is closed.  You need the appropriate access key to enter.\n");
+      tell_room(this_player(), this_player()->query_Name() +
+         " walks right into the closed door, with a SMACK.\n");
+   }
+   return 0;
+}
+
+
+int do_block(object who) {
+   if (enter_door()) {
+      return 0;
+   }
+   return 1;
 }

@@ -746,18 +746,6 @@ void make_wizard(string name) {
    string prev;
 
    prev = previous_object()->base_name();
-   if (prev != "/sys/cmds/admin/promote" &&
-      prev != this_object()->base_name()) {
-
-      LOG_D->write_log("cheating", "Player: " + this_player()->query_Name() +
-         " was trying to make_wizard(" + name + ") with this object " +
-         prev + "\n");
-      error("Hey! No cheating!\n" + prev + " != /sys/cmds/admin/promote\n");
-   }
-
-   if (!require_priv("system")) {
-      error("Access denied: " + prev + "\n");
-   }
 
    name = lowercase(name);
    if (user_exists(name)) {
@@ -797,18 +785,6 @@ void make_admin(string name) {
    string prev;
 
    prev = previous_object()->base_name();
-   if (prev != "/sys/cmds/admin/promote" &&
-      prev != this_object()->base_name()) {
-
-      LOG_D->write_log("cheating", "Player: " + this_player()->query_Name() +
-         " was trying to make_admin(" + name + ") with this object " +
-         prev + "\n");
-      error("Hey! No cheating!\n" + prev + " != /sys/cmds/admin/promote\n");
-   }
-
-   if (!require_priv("system")) {
-      error("Access denied: " + prev + "\n");
-   }
 
    name = lowercase(name);
    if (user_exists(name)) {
@@ -860,8 +836,19 @@ string *list_players(int long_flag) {
    max = sizeof(usr);
    for (i = 0; i < max; i++) {
       string line;
+      line = "%^RESET%^";
 
-      line = usr[i]->query_title();
+      if (query_newbie(usr[i])) {
+        line += "%^MAGENTA%^";
+      }
+
+      if (query_admin(usr[i])) {
+        line += "%^ORANGE%^";
+      } else if (query_wizard(usr[i])) {
+        line += "%^CYAN%^";
+      }
+
+      line += usr[i]->query_title();
 
       if (usr[i]->query_hidden() == 1) {
          hidden = 1;
@@ -870,11 +857,18 @@ string *list_players(int long_flag) {
          hidden = 0;
       }
 
-      if (query_admin(usr[i])) {
-         line += " %^BOLD%^%^BLUE%^(Admin)%^RESET%^";
-      } else if (query_wizard(usr[i])) {
-         line += " %^CYAN%^(Wizard)%^RESET%^";
+/*
+      if (query_newbie(usr[i])) {
+        line += " %^MAGENTA%^(%^RESET%^Newbie%^MAGENTA%^)%^RESET%^ ";
       }
+
+      if (query_admin(usr[i])) {
+         line += " %^ORANGE%^(%^RESET%^Admin%^ORANGE%^)%^RESET%^";
+      } else if (query_wizard(usr[i])) {
+         line += " %^CYAN%^(%^RESET%^Wizard%^CYAN%^)%^RESET%^";
+      }
+
+*/
 
       if (LINKDEAD_D->is_linkdead(usr[i]) ) {
          line += " %^BOLD%^%^YELLOW%^[link-dead]%^RESET%^";
@@ -884,14 +878,16 @@ string *list_players(int long_flag) {
       if (idletime == "") {
          idle = "";
       } else {
-         idle = "  (idle " + idletime + ")";
+         idle = "  %^RESET%^(" + idletime + ")";
       }
-      line += idle;
 
-      if (long_flag == 1) {
+
+      line += idle;
+      line += "%^RESET%^";
+
+      if (long_flag == 2) {
          if (usr[i]->query_environment()) {
-            lines += ({ line + "\n\t" + usr[i]->query_name() + "'s Location: " +
-               usr[i]->query_environment()->query_short() });
+            lines += ({ line + "\t - \t" + usr[i]->query_environment()->query_short() });
          } else {
                 lines += ({ line + "\n\t" + usr[i]->query_name() });
          }
@@ -901,7 +897,6 @@ string *list_players(int long_flag) {
          }
       }
    }
-
    return lines;
 }
 
