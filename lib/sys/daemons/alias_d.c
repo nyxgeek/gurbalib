@@ -18,6 +18,7 @@ void create(void) {
       restore_me();
    } else {
    /* Setup some basic defaults encase we do not have anything setup */
+   /* For these to update, you may need to remove lib/sys/daemons/data/alias_d.o */
    player_alias = ([
          "n": "go north $*",
          "s": "go south $*",
@@ -34,6 +35,7 @@ void create(void) {
          "exa": "look $*",
          "drink": "eat $*",
          "sc": "score $*",
+         "con": "consider $*",
          "kill": "attack $*"
       ]);
       wizard_alias = ([
